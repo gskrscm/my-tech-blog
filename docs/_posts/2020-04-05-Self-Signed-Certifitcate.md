@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Steps to create self-signed certificate"
-date:   2020-04-03 10:38:58 +0530
+date:   2020-04-05 10:10:58 +0530
 categories: Certificate
 ---
 
