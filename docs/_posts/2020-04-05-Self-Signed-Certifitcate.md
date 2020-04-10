@@ -13,13 +13,13 @@ A self signed certificate is certificate, which is not provided by trusted CA au
 
 ### Create folder structure: 
 
-```bash
-mkdir /root/ca
-cd /root/ca
-mkdir certs crl newcerts private
-chmod 700 private
-touch index.txt
-echo 1000 > serial
+```shell
+ mkdir /root/ca
+ cd /root/ca
+ mkdir certs crl newcerts private
+ chmod 700 private
+ touch index.txt
+ echo 1000 > serial
 ```
 ### Create Root CA configuration file:
 
@@ -27,59 +27,59 @@ Download or copy [Root CA configuration file]({{site.url}}/{{site.baseurl}}/file
 
 ### Create Root Key: 
 
-```bash
-cd /root/ca
-openssl genrsa -aes256 -out private/ca.key.pem 4096
+```shell
+ cd /root/ca
+ openssl genrsa -aes256 -out private/ca.key.pem 4096
 ```
-Output:
-Enter pass phrase for ca.key.pem: secretpassword
-Verifying - Enter pass phrase for ca.key.pem: secretpassword
-```bash
-chmod 400 private/ca.key.pem
+ Output:
+ Enter pass phrase for ca.key.pem: secretpassword
+ Verifying - Enter pass phrase for ca.key.pem: secretpassword
+```shell
+ chmod 400 private/ca.key.pem
 ```
 ### Create Root Certificate: 
 
-{% highlight bash %}
-cd /root/ca
-openssl req -config openssl.cnf \
+```shell
+ cd /root/ca
+ openssl req -config openssl.cnf \
       -key private/ca.key.pem \
       -new -x509 -days 7300 -sha256 -extensions v3_ca \
       -out certs/ca.cert.pem
 
-Enter pass phrase for ca.key.pem: secretpassword
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
------
-Country Name (2 letter code) [XX]:GB
-State or Province Name []:England
-Locality Name []:
-Organization Name []:Alice Ltd
-Organizational Unit Name []:Alice Ltd Certificate Authority
-Common Name []:Alice Ltd Root CA
-Email Address []:
+ Enter pass phrase for ca.key.pem: secretpassword
+ You are about to be asked to enter information that will be incorporated
+ into your certificate request.
+ -----
+ Country Name (2 letter code) [XX]:GB
+ State or Province Name []:England
+ Locality Name []:
+ Organization Name []:Alice Ltd
+ Organizational Unit Name []:Alice Ltd Certificate Authority
+ Common Name []:Alice Ltd Root CA
+ Email Address []:
 
-chmod 444 certs/ca.cert.pem
-{% endhighlight %}
+ chmod 444 certs/ca.cert.pem
+```
 
 
 ### Verify the root certificate: 
 
-```bash
-openssl x509 -noout -text -in certs/ca.cert.pem
+```shell
+ openssl x509 -noout -text -in certs/ca.cert.pem
 ```
 
 ## Step 2: Create Intermediate Certs:
 
 ### Create folder structure: 
 
-```bash
-mkdir /root/ca/intermediate
-cd /root/ca/intermediate
-mkdir certs crl csr newcerts private
-chmod 700 private
-touch index.txt
-echo 1000 > serial
-echo 1000 > /root/ca/intermediate/crlnumber
+```shell
+ mkdir /root/ca/intermediate
+ cd /root/ca/intermediate
+ mkdir certs crl csr newcerts private
+ chmod 700 private
+ touch index.txt
+ echo 1000 > serial
+ echo 1000 > /root/ca/intermediate/crlnumber
 ```
 ### Create Intermediate CA configuration file:
 
@@ -87,112 +87,112 @@ Download or copy [Intermediate configuration file]({{site.url}}/{{site.baseurl}}
 
 ### Create Intermediate Key: 
 
-```bash
-cd /root/ca
-openssl genrsa -aes256 \
+```shell
+ cd /root/ca
+ openssl genrsa -aes256 \
       -out intermediate/private/intermediate.key.pem 4096
 
-Enter pass phrase for intermediate.key.pem: secretpassword
-Verifying - Enter pass phrase for intermediate.key.pem: secretpassword
+ Enter pass phrase for intermediate.key.pem: secretpassword
+ Verifying - Enter pass phrase for intermediate.key.pem: secretpassword
 
-chmod 400 intermediate/private/intermediate.key.pem
+ chmod 400 intermediate/private/intermediate.key.pem
 ```
 
 ### Create Intermediate Certificate:
 
-```bash
-cd /root/ca
-openssl req -config intermediate/openssl.cnf -new -sha256 \
+```shell
+ cd /root/ca
+ openssl req -config intermediate/openssl.cnf -new -sha256 \
       -key intermediate/private/intermediate.key.pem \
       -out intermediate/csr/intermediate.csr.pem
 
-Enter pass phrase for intermediate.key.pem: secretpassword
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
------
-Country Name (2 letter code) [XX]:GB
-State or Province Name []:England
-Locality Name []:
-Organization Name []:Alice Ltd
-Organizational Unit Name []:Alice Ltd Certificate Authority
-Common Name []:Alice Ltd Intermediate CA
-Email Address []:
+ Enter pass phrase for intermediate.key.pem: secretpassword
+ You are about to be asked to enter information that will be incorporated
+ into your certificate request.
+ -----
+ Country Name (2 letter code) [XX]:GB
+ State or Province Name []:England
+ Locality Name []:
+ Organization Name []:Alice Ltd
+ Organizational Unit Name []:Alice Ltd Certificate Authority
+ Common Name []:Alice Ltd Intermediate CA
+ Email Address []:
 
 
-openssl ca -config openssl.cnf -extensions v3_intermediate_ca \
+ openssl ca -config openssl.cnf -extensions v3_intermediate_ca \
       -days 3650 -notext -md sha256 \
       -in intermediate/csr/intermediate.csr.pem \
       -out intermediate/certs/intermediate.cert.pem
 
-Enter pass phrase for ca.key.pem: secretpassword
-Sign the certificate? [y/n]: y
+ Enter pass phrase for ca.key.pem: secretpassword
+ Sign the certificate? [y/n]: y
 
-chmod 444 intermediate/certs/intermediate.cert.pem
+ chmod 444 intermediate/certs/intermediate.cert.pem
 ```
 ### Verify the Intermediate certificate:
 
-```bash
-openssl x509 -noout -text \
+```shell
+ openssl x509 -noout -text \
       -in intermediate/certs/intermediate.cert.pem
 
-openssl verify -CAfile certs/ca.cert.pem \
+ openssl verify -CAfile certs/ca.cert.pem \
       intermediate/certs/intermediate.cert.pem
 
-intermediate.cert.pem: OK
+ intermediate.cert.pem: OK
 ```
 ### Create the certificate chain file
 
-```bash
+```shell
  cat intermediate/certs/intermediate.cert.pem \
       certs/ca.cert.pem > intermediate/certs/ca-chain.cert.pem
-chmod 444 intermediate/certs/ca-chain.cert.pem
+ chmod 444 intermediate/certs/ca-chain.cert.pem
 ```
 
 ## Step 3: Create Sign server and client certificate
 
 ### Create Key 
 
-```bash
-cd /root/ca
-openssl genrsa -aes256 \
+```shell
+ cd /root/ca
+ openssl genrsa -aes256 \
       -out intermediate/private/www.example.com.key.pem 2048
-chmod 400 intermediate/private/www.example.com.key.pem
+ chmod 400 intermediate/private/www.example.com.key.pem
 ```
 ### Create Certificate
 
-```bash
-cd /root/ca
-openssl req -config intermediate/openssl.cnf \
+```shell
+ cd /root/ca
+ openssl req -config intermediate/openssl.cnf \
       -key intermediate/private/www.example.com.key.pem \
       -new -sha256 -out intermediate/csr/www.example.com.csr.pem
 
-Enter pass phrase for www.example.com.key.pem: secretpassword
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
------
-Country Name (2 letter code) [XX]:US
-State or Province Name []:California
-Locality Name []:Mountain View
-Organization Name []:Alice Ltd
-Organizational Unit Name []:Alice Ltd Web Services
-Common Name []:www.example.com
-Email Address []:
+ Enter pass phrase for www.example.com.key.pem: secretpassword
+ You are about to be asked to enter information that will be incorporated
+ into your certificate request.
+ -----
+ Country Name (2 letter code) [XX]:US
+ State or Province Name []:California
+ Locality Name []:Mountain View
+ Organization Name []:Alice Ltd
+ Organizational Unit Name []:Alice Ltd Web Services
+ Common Name []:www.example.com
+ Email Address []:
 
-cd /root/ca
-openssl ca -config intermediate/openssl.cnf \
+ cd /root/ca
+ openssl ca -config intermediate/openssl.cnf \
       -extensions server_cert -days 375 -notext -md sha256 \
       -in intermediate/csr/www.example.com.csr.pem \
       -out intermediate/certs/www.example.com.cert.pem
-chmod 444 intermediate/certs/www.example.com.cert.pem
+ chmod 444 intermediate/certs/www.example.com.cert.pem
 ```
 
 ### Verify the certificate
 
-```bash
-openssl x509 -noout -text \
+```shell
+ openssl x509 -noout -text \
       -in intermediate/certs/www.example.com.cert.pem
 
-openssl verify -CAfile intermediate/certs/ca-chain.cert.pem \
+ openssl verify -CAfile intermediate/certs/ca-chain.cert.pem \
       intermediate/certs/www.example.com.cert.pem
 ```
 
@@ -205,18 +205,18 @@ openssl verify -CAfile intermediate/certs/ca-chain.cert.pem \
 
 ### Step 4: Create JKS file
 
-```bash
-cd intermediate
-openssl pkcs12 -export -in certs/www.example.com.cert.pem -inkey private/www.example.com.key.pem -chain -CAfile certs/ca-chain.cert.pem -name "www.example.com" -out www.example.com.p12
+```shell
+ cd intermediate
+ openssl pkcs12 -export -in certs/www.example.com.cert.pem -inkey private/www.example.com.key.pem      -chain -CAfile certs/ca-chain.cert.pem -name "www.example.com" -out www.example.com.p12
 
-keytool -importkeystore -deststorepass <password> -destkeystore www.example.com.jks -srckeystore www.example.com.p12 -srcstoretype PKCS12
+ keytool -importkeystore -deststorepass <password> -destkeystore www.example.com.jks -srckeystore      www.example.com.p12 -srcstoretype PKCS12
 ```
 
 Ref: [ssl-jks-creation][ssl-jks-creation]
 
 ### Step 5: To read or verify PKSC12 and JKS file 
 
-```bash 
+```shell 
 keytool -v -list -keystore www.example.com.jks
 keytool -v -list -keystore www.example.com.p12
 ```
@@ -226,7 +226,7 @@ keytool -v -list -keystore www.example.com.p12
 
 #### How to read CER file ?
 
-```bash 
+```shell 
 openssl req -noout -text -in www.example.csr.pem
 ```
 
@@ -239,7 +239,10 @@ openssl req -noout -text -in www.example.csr.pem
 #### How to inclue SAN part of CSR ?
 [Refer](https://geekflare.com/san-ssl-certificate/)
 
+# Conclusion:
+
+I hope this article, will help you create self signed certificate. Please comment if you face any issues. 
+
+
 [ssl-jks-creation]: https://coderwall.com/p/3t4xka/import-private-key-and-certificate-into-java-keystore
 [slef-signed-cert-creation]: https://jamielinux.com/docs/openssl-certificate-authority/introduction.html
-
-# Conclusion: 
