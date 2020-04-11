@@ -22,3 +22,11 @@ IDEAS:
 - Jira api automation
 - Docker and Kubernetes
 - Chef
+
+
+
+Tools: 
+- Get image for the post with minification. 
+
+Theme:
+- Theme using: https://github.com/wowthemesnet/mediumish-theme-jekyll

@@ -3,6 +3,7 @@ layout: post
 title:  "How to create a self-signed certificate"
 date:   2020-04-05 10:10:58 +0530
 categories: Certificate
+image: assets/images/ssl.jpg
 ---
 
 # Introduction:
