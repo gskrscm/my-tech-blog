@@ -2,17 +2,23 @@
 layout: post
 title:  "How to create a self-signed certificate"
 date:   2020-04-05 10:10:58 +0530
+author: siva
+featured: true
 categories: Certificate
-image: assets/images/ssl.jpg
+image: assets/images/ssl.jpeg
 ---
 
-# Introduction:
+A self signed certificate is certificate, which is not provided by trusted CA authorities like Digicert. In some cases it make sense to use Self signed certificate like dev environment or for intra net websites. Self signed certificate is used for a web application like apache, nginx etc, to make it run on HTTPS Service. 
 
-A self signed certificate is certificate, which is not provided by trusted CA authorities like Digicert. In some cases it make sense to use Self signed certificate like dev environment or for intra net websites. Self signed certificate is used for a web application like apache, nginx etc, to make it run on HTTPS Service. In this blog we will use `openssl` and `keytool` utilities to create Self Signed Certificate.
+## Prerequists:
+- Openssl
+- Keytool
 
 ## Step 1: Create Root Certs:
 
 ### Create folder structure: 
+
+Run below commands to create folder structure to crearte root certs.
 
 ```shell
  mkdir /root/ca
@@ -28,17 +34,20 @@ Download or copy [Root CA configuration file]({{site.url}}/{{site.baseurl}}/file
 
 ### Create Root Key: 
 
+Run below commands to create `ca.key.pem` root key file and change permission of the file.
+
 ```shell
  cd /root/ca
  openssl genrsa -aes256 -out private/ca.key.pem 4096
-```
- Output:
+
  Enter pass phrase for ca.key.pem: secretpassword
  Verifying - Enter pass phrase for ca.key.pem: secretpassword
-```shell
+
  chmod 400 private/ca.key.pem
 ```
 ### Create Root Certificate: 
+
+Run below commands to create `ca.cert.pem` file. 
 
 ```shell
  cd /root/ca
@@ -73,6 +82,8 @@ Download or copy [Root CA configuration file]({{site.url}}/{{site.baseurl}}/file
 
 ### Create folder structure: 
 
+Run below commands to create folder structure for intermediate certificate.
+
 ```shell
  mkdir /root/ca/intermediate
  cd /root/ca/intermediate
@@ -88,6 +99,8 @@ Download or copy [Intermediate configuration file]({{site.url}}/{{site.baseurl}}
 
 ### Create Intermediate Key: 
 
+Run below command to create `intermediate.key.pem` file.
+
 ```shell
  cd /root/ca
  openssl genrsa -aes256 \
@@ -100,6 +113,9 @@ Download or copy [Intermediate configuration file]({{site.url}}/{{site.baseurl}}
 ```
 
 ### Create Intermediate Certificate:
+
+Run below commands to create intermediate certificate request file i.e,`intermediate.csr.pem` and intermediate
+certificate file i.e, `intermediate.cert.pem`.
 
 ```shell
  cd /root/ca
@@ -132,6 +148,8 @@ Download or copy [Intermediate configuration file]({{site.url}}/{{site.baseurl}}
 ```
 ### Verify the Intermediate certificate:
 
+With the help of below commands we can read and verify the content of `intermediate.cert.pem` file.
+
 ```shell
  openssl x509 -noout -text \
       -in intermediate/certs/intermediate.cert.pem
@@ -142,6 +160,8 @@ Download or copy [Intermediate configuration file]({{site.url}}/{{site.baseurl}}
  intermediate.cert.pem: OK
 ```
 ### Create the certificate chain file
+
+Run below commands to create `ca-chain.cert.pem` file.
 
 ```shell
  cat intermediate/certs/intermediate.cert.pem \
@@ -159,6 +179,7 @@ Download or copy [Intermediate configuration file]({{site.url}}/{{site.baseurl}}
       -out intermediate/private/www.example.com.key.pem 2048
  chmod 400 intermediate/private/www.example.com.key.pem
 ```
+
 ### Create Certificate
 
 ```shell
@@ -206,6 +227,8 @@ Download or copy [Intermediate configuration file]({{site.url}}/{{site.baseurl}}
 
 ### Step 4: Create JKS file
 
+Above three files are used in below command to create `P12` and `JKS` key storage files.
+
 ```shell
  cd intermediate
  openssl pkcs12 -export -in certs/www.example.com.cert.pem -inkey private/www.example.com.key.pem      -chain -CAfile certs/ca-chain.cert.pem -name "www.example.com" -out www.example.com.p12
@@ -225,20 +248,22 @@ keytool -v -list -keystore www.example.com.p12
 
 # FAQ`s
 
-#### How to read CER file ?
+#### How to read CSsR file ?
 
-```shell 
-openssl req -noout -text -in www.example.csr.pem
-```
+To read the content of certificate request file i.e, CSR `openssl req -noout -text -in www.example.csr.pem`
 
 #### Failed to updated DB TXT_DB error number 2
-[Refer](https://stackoverflow.com/questions/9496698/how-to-revoke-an-openssl-certificate-when-you-dont-have-the-certificate)
+
+[Refer](https://stackoverflow.com/questions/9496698/how-to-revoke-an-openssl-certificate-when-you-dont-have-the-certificate) this article when you get `Failed to updated DB TXT_DB error number 2` get error. 
 
 #### How to include SAN part of CERT ?
-[Refer](https://stackoverflow.com/questions/30977264/subject-alternative-name-not-present-in-certificate)
 
-#### How to inclue SAN part of CSR ?
-[Refer](https://geekflare.com/san-ssl-certificate/)
+[Refer](https://stackoverflow.com/questions/30977264/subject-alternative-name-not-present-in-certificate) this article to include subject alternative names as part certificate i.e, CERT file
+
+
+#### How to include SAN part of CSR ?
+
+[Refer](https://geekflare.com/san-ssl-certificate/) this article to include subject alternative names as part certificate request i.e, CSR file
 
 # Conclusion:
 
