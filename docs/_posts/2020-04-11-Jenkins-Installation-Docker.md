@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How to install and run Jenkins using docker and docker compose?"
+title:  "How to install and run Jenkins using docker and docker-compose?"
 date:   2020-04-11 10:10:58 +0530
 categories: Jenkins
 featured: true
@@ -8,8 +8,8 @@ author: siva
 image: assets/images/docker-jenkins.png
 ---
 
-In this blog, we will install jenkins using docker. Also, we will persist data out side of the container. 
-We will also learn how to install using docker compose. With the help of docker compose, it will be very easy to run Jenkins. 
+In this blog, we will install Jenkins using docker. Also, we will persist Jenkins configs, jobs and plugins data outside of the container. 
+We will also learn how to install using docker-compose. With the help of docker-compose, it will be very easy to run Jenkins. 
 
 ## Pre-requists
 * Docker
@@ -17,7 +17,7 @@ We will also learn how to install using docker compose. With the help of docker 
 
 ## Steps
 
-1) First pull the jenkins docker image from the docker hub repository.
+1) First, pull the Jenkins docker image from the docker hub repository.
 
 `docker pull jenkins/jenkins`
 ```shell 
@@ -55,7 +55,7 @@ REPOSITORY                                                   TAG                
 jenkins/jenkins                                              latest              3b38d20c7a23        5 days ago          619MB
 ```
 
-2) Next, we have to start the container from jenkins image using below command.
+2) Next, we have to start the container from the Jenkins image using the below command.
 
 `docker run -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts`
 
@@ -63,34 +63,34 @@ jenkins/jenkins                                              latest             
 docker run -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
 Running from: /usr/share/jenkins/jenkins.war
 webroot: EnvVars.masterEnvVars.get("JENKINS_HOME")
-2020-04-12 06:24:14.008+0000 [id=1]	INFO	org.eclipse.jetty.util.log.Log#initialized: Logging initialized @1118ms to org.eclipse.jetty.util.log.JavaUtilLog
-2020-04-12 06:24:14.292+0000 [id=1]	INFO	winstone.Logger#logInternal: Beginning extraction from war file
-2020-04-12 06:24:16.324+0000 [id=1]	WARNING	o.e.j.s.handler.ContextHandler#setContextPath: Empty contextPath
-2020-04-12 06:24:16.460+0000 [id=1]	INFO	org.eclipse.jetty.server.Server#doStart: jetty-9.4.z-SNAPSHOT; built: 2019-05-02T00:04:53.875Z; git: e1bc35120a6617ee3df052294e433f3a25ce7097; jvm 1.8.0_232-b09
-2020-04-12 06:24:16.985+0000 [id=1]	INFO	o.e.j.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.jsp.JettyJspServlet
-2020-04-12 06:24:17.114+0000 [id=1]	INFO	o.e.j.s.s.DefaultSessionIdManager#doStart: DefaultSessionIdManager workerName=node0
-2020-04-12 06:24:17.114+0000 [id=1]	INFO	o.e.j.s.s.DefaultSessionIdManager#doStart: No SessionScavenger set, using defaults
-2020-04-12 06:24:17.126+0000 [id=1]	INFO	o.e.j.server.session.HouseKeeper#startScavenging: node0 Scavenging every 600000ms
-2020-04-12 06:24:17.822+0000 [id=1]	INFO	hudson.WebAppMain#contextInitialized: Jenkins home directory: /var/jenkins_home found at: EnvVars.masterEnvVars.get("JENKINS_HOME")
-2020-04-12 06:24:18.133+0000 [id=1]	INFO	o.e.j.s.handler.ContextHandler#doStart: Started w.@26be6ca7{Jenkins v2.204.1,/,file:///var/jenkins_home/war/,AVAILABLE}{/var/jenkins_home/war}
-2020-04-12 06:24:18.195+0000 [id=1]	INFO	o.e.j.server.AbstractConnector#doStart: Started ServerConnector@19932c16{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}
-2020-04-12 06:24:18.196+0000 [id=1]	INFO	org.eclipse.jetty.server.Server#doStart: Started @5308ms
-2020-04-12 06:24:18.199+0000 [id=21]	INFO	winstone.Logger#logInternal: Winstone Servlet Engine v4.0 running: controlPort=disabled
-2020-04-12 06:24:20.211+0000 [id=28]	INFO	jenkins.InitReactorRunner$1#onAttained: Started initialization
-2020-04-12 06:24:20.266+0000 [id=31]	INFO	jenkins.InitReactorRunner$1#onAttained: Listed all plugins
-2020-04-12 06:24:22.235+0000 [id=32]	INFO	jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
-2020-04-12 06:24:22.258+0000 [id=32]	INFO	jenkins.InitReactorRunner$1#onAttained: Started all plugins
-2020-04-12 06:24:22.273+0000 [id=28]	INFO	jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
-2020-04-12 06:24:23.180+0000 [id=29]	INFO	jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
-2020-04-12 06:24:23.224+0000 [id=46]	INFO	hudson.model.AsyncPeriodicWork#lambda$doRun$0: Started Download metadata
-2020-04-12 06:24:23.247+0000 [id=46]	INFO	hudson.util.Retrier#start: Attempt #1 to do the action check updates server
-2020-04-12 06:24:24.751+0000 [id=28]	INFO	o.s.c.s.AbstractApplicationContext#prepareRefresh: Refreshing org.springframework.web.context.support.StaticWebApplicationContext@44bbbe2d: display name [Root WebApplicationContext]; startup date [Sun Apr 12 06:24:24 UTC 2020]; root of context hierarchy
-2020-04-12 06:24:24.752+0000 [id=28]	INFO	o.s.c.s.AbstractApplicationContext#obtainFreshBeanFactory: Bean factory for application context [org.springframework.web.context.support.StaticWebApplicationContext@44bbbe2d]: org.springframework.beans.factory.support.DefaultListableBeanFactory@3dbc2e3a
-2020-04-12 06:24:24.778+0000 [id=28]	INFO	o.s.b.f.s.DefaultListableBeanFactory#preInstantiateSingletons: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@3dbc2e3a: defining beans [authenticationManager]; root of factory hierarchy
-2020-04-12 06:24:25.039+0000 [id=28]	INFO	o.s.c.s.AbstractApplicationContext#prepareRefresh: Refreshing org.springframework.web.context.support.StaticWebApplicationContext@71a0bf49: display name [Root WebApplicationContext]; startup date [Sun Apr 12 06:24:25 UTC 2020]; root of context hierarchy
-2020-04-12 06:24:25.040+0000 [id=28]	INFO	o.s.c.s.AbstractApplicationContext#obtainFreshBeanFactory: Bean factory for application context [org.springframework.web.context.support.StaticWebApplicationContext@71a0bf49]: org.springframework.beans.factory.support.DefaultListableBeanFactory@3a9f051d
-2020-04-12 06:24:25.042+0000 [id=28]	INFO	o.s.b.f.s.DefaultListableBeanFactory#preInstantiateSingletons: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@3a9f051d: defining beans [filter,legacy]; root of factory hierarchy
-2020-04-12 06:24:25.433+0000 [id=28]	INFO	jenkins.install.SetupWizard#init:
+2020-04-12 06:24:14.008+0000 [id=1] INFO    org.eclipse.jetty.util.log.Log#initialized: Logging initialized @1118ms to org.eclipse.jetty.util.log.JavaUtilLog
+2020-04-12 06:24:14.292+0000 [id=1] INFO    winstone.Logger#logInternal: Beginning extraction from war file
+2020-04-12 06:24:16.324+0000 [id=1] WARNING o.e.j.s.handler.ContextHandler#setContextPath: Empty contextPath
+2020-04-12 06:24:16.460+0000 [id=1] INFO    org.eclipse.jetty.server.Server#doStart: jetty-9.4.z-SNAPSHOT; built: 2019-05-02T00:04:53.875Z; git: e1bc35120a6617ee3df052294e433f3a25ce7097; jvm 1.8.0_232-b09
+2020-04-12 06:24:16.985+0000 [id=1] INFO    o.e.j.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.jsp.JettyJspServlet
+2020-04-12 06:24:17.114+0000 [id=1] INFO    o.e.j.s.s.DefaultSessionIdManager#doStart: DefaultSessionIdManager workerName=node0
+2020-04-12 06:24:17.114+0000 [id=1] INFO    o.e.j.s.s.DefaultSessionIdManager#doStart: No SessionScavenger set, using defaults
+2020-04-12 06:24:17.126+0000 [id=1] INFO    o.e.j.server.session.HouseKeeper#startScavenging: node0 Scavenging every 600000ms
+2020-04-12 06:24:17.822+0000 [id=1] INFO    hudson.WebAppMain#contextInitialized: Jenkins home directory: /var/jenkins_home found at: EnvVars.masterEnvVars.get("JENKINS_HOME")
+2020-04-12 06:24:18.133+0000 [id=1] INFO    o.e.j.s.handler.ContextHandler#doStart: Started w.@26be6ca7{Jenkins v2.204.1,/,file:///var/jenkins_home/war/,AVAILABLE}{/var/jenkins_home/war}
+2020-04-12 06:24:18.195+0000 [id=1] INFO    o.e.j.server.AbstractConnector#doStart: Started ServerConnector@19932c16{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}
+2020-04-12 06:24:18.196+0000 [id=1] INFO    org.eclipse.jetty.server.Server#doStart: Started @5308ms
+2020-04-12 06:24:18.199+0000 [id=21]    INFO    winstone.Logger#logInternal: Winstone Servlet Engine v4.0 running: controlPort=disabled
+2020-04-12 06:24:20.211+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Started initialization
+2020-04-12 06:24:20.266+0000 [id=31]    INFO    jenkins.InitReactorRunner$1#onAttained: Listed all plugins
+2020-04-12 06:24:22.235+0000 [id=32]    INFO    jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
+2020-04-12 06:24:22.258+0000 [id=32]    INFO    jenkins.InitReactorRunner$1#onAttained: Started all plugins
+2020-04-12 06:24:22.273+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
+2020-04-12 06:24:23.180+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
+2020-04-12 06:24:23.224+0000 [id=46]    INFO    hudson.model.AsyncPeriodicWork#lambda$doRun$0: Started Download metadata
+2020-04-12 06:24:23.247+0000 [id=46]    INFO    hudson.util.Retrier#start: Attempt #1 to do the action check updates server
+2020-04-12 06:24:24.751+0000 [id=28]    INFO    o.s.c.s.AbstractApplicationContext#prepareRefresh: Refreshing org.springframework.web.context.support.StaticWebApplicationContext@44bbbe2d: display name [Root WebApplicationContext]; startup date [Sun Apr 12 06:24:24 UTC 2020]; root of context hierarchy
+2020-04-12 06:24:24.752+0000 [id=28]    INFO    o.s.c.s.AbstractApplicationContext#obtainFreshBeanFactory: Bean factory for application context [org.springframework.web.context.support.StaticWebApplicationContext@44bbbe2d]: org.springframework.beans.factory.support.DefaultListableBeanFactory@3dbc2e3a
+2020-04-12 06:24:24.778+0000 [id=28]    INFO    o.s.b.f.s.DefaultListableBeanFactory#preInstantiateSingletons: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@3dbc2e3a: defining beans [authenticationManager]; root of factory hierarchy
+2020-04-12 06:24:25.039+0000 [id=28]    INFO    o.s.c.s.AbstractApplicationContext#prepareRefresh: Refreshing org.springframework.web.context.support.StaticWebApplicationContext@71a0bf49: display name [Root WebApplicationContext]; startup date [Sun Apr 12 06:24:25 UTC 2020]; root of context hierarchy
+2020-04-12 06:24:25.040+0000 [id=28]    INFO    o.s.c.s.AbstractApplicationContext#obtainFreshBeanFactory: Bean factory for application context [org.springframework.web.context.support.StaticWebApplicationContext@71a0bf49]: org.springframework.beans.factory.support.DefaultListableBeanFactory@3a9f051d
+2020-04-12 06:24:25.042+0000 [id=28]    INFO    o.s.b.f.s.DefaultListableBeanFactory#preInstantiateSingletons: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@3a9f051d: defining beans [filter,legacy]; root of factory hierarchy
+2020-04-12 06:24:25.433+0000 [id=28]    INFO    jenkins.install.SetupWizard#init:
 
 *************************************************************
 *************************************************************
@@ -107,12 +107,12 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 *************************************************************
 *************************************************************
 
-2020-04-12 06:24:33.062+0000 [id=28]	INFO	hudson.model.UpdateSite#updateData: Obtained the latest update center data file for UpdateSource default
-2020-04-12 06:24:33.401+0000 [id=32]	INFO	jenkins.InitReactorRunner$1#onAttained: Completed initialization
-2020-04-12 06:24:33.433+0000 [id=20]	INFO	hudson.WebAppMain$3#run: Jenkins is fully up and running
+2020-04-12 06:24:33.062+0000 [id=28]    INFO    hudson.model.UpdateSite#updateData: Obtained the latest update center data file for UpdateSource default
+2020-04-12 06:24:33.401+0000 [id=32]    INFO    jenkins.InitReactorRunner$1#onAttained: Completed initialization
+2020-04-12 06:24:33.433+0000 [id=20]    INFO    hudson.WebAppMain$3#run: Jenkins is fully up and running
 ```
 
-The jenkins process starts and the process runs in the foreground. To make it run the jenkins process in the background, use `-d` option for the same command. 
+The Jenkins process starts and the process runs in the foreground. To make it run the Jenkins process in the background, use the `-d` option for the same command. 
 
 `docker run -d -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts`
 
@@ -140,16 +140,16 @@ CONTAINER ID        IMAGE                 COMMAND                  CREATED      
 
 To see jenkins container logs run `docker logs <jenkins container id/name>`, to see logs continuously add `-f` option at the end of the command i.e, `docker logs <jenkins container id/name> -f`.
 
-To stop the jenkins container run `docker stop <jenkins container id/name>`
+To stop the Jenkins container run `docker stop <jenkins container id/name>`
 
-3) Persist jenkins home data directory. When the jenkins container deleted, the jobs, plugins and global configs also be lost. So, we have to persist the jenkins home directory to host machine. Using option `-v <host machine full path>:<jenkins home directory on container>`
+3) Persist Jenkins home data directory. When the Jenkins container deleted, the jobs, plugins and global configs also be lost. So, we have to persist the Jenkins home directory to the host machine. Using option `-v <host machine full path>:<jenkins home directory on container>`
 
 ```shell
  docker run -d -v /Users/siva/Play/docker/jenkins/data:/var/jenkins_home \
                         -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
 ```
 
-4) Running jenkins via docker compose. 
+4) Running Jenkins via docker-compose. 
 
 * Create `docker-compose.yml` file and copy below content
 
@@ -172,4 +172,4 @@ volumes:
 * Run `docker-compose stop` command to stop the container
 
 
-If you face any issues, setting jenkins using docker, please share error in the comments. We will try to help you.
+If you face any issues, setting Jenkins using docker, please share an error in the comments. We will try to help you.
