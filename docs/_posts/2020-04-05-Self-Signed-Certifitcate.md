@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How to create a self-signed certificate"
+title:  "How to create a root, intermediate and self-signed certificate"
 date:   2020-04-05 10:10:58 +0530
 author: siva
 featured: true
